@@ -1,0 +1,307 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Equipment Management API",
+    "description": "API for managing rental equipment inventory with multi-tenant support",
+    "version": "1.0.0"
+  },
+  "host": "localhost:8080",
+  "basePath": "/api",
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/equipment": {
+      "get": {
+        "tags": ["Equipment"],
+        "summary": "Get all equipment",
+        "description": "Retrieves all equipment for a specific tenant",
+        "parameters": [
+          {
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "description": "Tenant identifier",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of equipment items",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Equipment"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Tenant ID is missing"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Equipment"],
+        "summary": "Add new equipment",
+        "description": "Adds a new piece of equipment to the inventory",
+        "parameters": [
+          {
+            "name": "equipment",
+            "in": "body",
+            "description": "Equipment item to add",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Equipment"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Equipment created successfully",
+            "schema": {
+              "$ref": "#/definitions/Equipment"
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid equipment data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/equipment/{id}": {
+      "get": {
+        "tags": ["Equipment"],
+        "summary": "Get equipment by ID",
+        "description": "Retrieves a specific piece of equipment by its ID",
+        "parameters": [
+          {
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "description": "Tenant identifier",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Equipment identifier",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Equipment found",
+            "schema": {
+              "$ref": "#/definitions/Equipment"
+            }
+          },
+          "400": {
+            "description": "Bad request - Tenant ID is missing"
+          },
+          "404": {
+            "description": "Equipment not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Equipment"],
+        "summary": "Update equipment",
+        "description": "Updates an existing piece of equipment",
+        "parameters": [
+          {
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "description": "Tenant identifier",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Equipment identifier",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "equipment",
+            "in": "body",
+            "description": "Updated equipment data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Equipment"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Equipment updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Equipment"
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid equipment data or tenant ID missing"
+          },
+          "404": {
+            "description": "Equipment not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Equipment"],
+        "summary": "Delete equipment",
+        "description": "Deletes a piece of equipment from the inventory",
+        "parameters": [
+          {
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "description": "Tenant identifier",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Equipment identifier",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Equipment deleted successfully"
+          },
+          "400": {
+            "description": "Bad request - Tenant ID is missing"
+          },
+          "404": {
+            "description": "Equipment not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/equipment/search": {
+      "get": {
+        "tags": ["Equipment"],
+        "summary": "Search equipment",
+        "description": "Searches for equipment using natural language queries",
+        "parameters": [
+          {
+            "name": "X-Tenant-ID",
+            "in": "header",
+            "description": "Tenant identifier",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Search query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Equipment"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Tenant ID is missing"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Equipment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the equipment"
+        },
+        "tenantId": {
+          "type": "string",
+          "description": "Identifier of the tenant who owns the equipment"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the equipment"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the equipment"
+        },
+        "category": {
+          "type": "string",
+          "description": "Category of the equipment (e.g., Skis, Snowboards, Footwear, Poles)"
+        },
+        "status": {
+          "type": "string",
+          "description": "Current status of the equipment"
+        },
+        "attributes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Additional attributes of the equipment (e.g., size, color, brand)"
+        },
+        "lastMaintenanceDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date and time of the last maintenance"
+        },
+        "purchaseDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the equipment was purchased"
+        },
+        "serialNumber": {
+          "type": "string",
+          "description": "Serial number of the equipment"
+        }
+      },
+      "required": [
+        "tenantId",
+        "name",
+        "description",
+        "category",
+        "status",
+        "purchaseDate"
+      ]
+    }
+  }
+}

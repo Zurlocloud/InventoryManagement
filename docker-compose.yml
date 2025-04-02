@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  equipmentmanagement:
+    build:
+      context: ./EquipmentManagement
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - CosmosDB__ConnectionString=AccountEndpoint=https://inventory-rental-cosmos.documents.azure.com:443/;AccountKey=Ew0NkXr0qHIDy9WW9XZ8AmiKi2Z1ZpIOBDDfvaBo8gcvDszuKRLK4kLCKapd7TnB7E4IlqYJC3wmACDbpp6W4w==;
+      - CosmosDb__DatabaseId=InventoryRentalDB
+      - CosmosDb__ContainerId=equipment
+      - AzureOpenAI__GPT4__Endpoint=https://aoai-inventory-mgmt.openai.azure.com/
+      - AzureOpenAI__GPT4__ApiKey=8C7z4vFzTePRNgVmdMzsUOJfakxGfXAKRjOFgHnyxmhhZfhgfkn7JQQJ99BCACHYHv6XJ3w3AAABACOG4gk0
+      - AzureOpenAI__GPT4__DeploymentName=gpt-4o
+      - AzureOpenAI__Embeddings__Endpoint=https://zacha-m87ncoyk-swedencentral.cognitiveservices.azure.com/
+      - AzureOpenAI__Embeddings__ApiKey=2CPU6utV1q71sFMcgxWYhv7iYEqrl0syvnStBPY41zuPrBOlVCafJQQJ99BCACfhMk5XJ3w3AAAAACOGGIw6
+      - AzureOpenAI__Embeddings__DeploymentName=text-embedding-ada-002
+
